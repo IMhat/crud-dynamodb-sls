@@ -1,0 +1,160 @@
+service: aws-node-http-api-project
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: sa-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:sa-east-1:559668413333:table/TaskTable
+
+functions:
+  hello:
+    handler: src/handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
+  
+  createTask:
+    handler: src/addTasks.addTasks
+    events:
+      - httpApi:
+          path: /tasks
+          method: post
+  
+  getTasks:
+    handler: src/getTasks.getTasks
+    events:
+      - httpApi:
+          path: /tasks
+          method: get
+
+  getTask:
+    handler: src/getTask.getTask
+    events:
+      - httpApi:
+          path: /tasks/{id}
+          method: get
+
+  updateTask:
+    handler: src/updateTask.updateTask
+    events:
+      - httpApi:
+          path: /tasks/{id}
+          method: put
+
+  deleteTask:
+    handler: src/deleteTask.deleteTask
+    events:
+      - httpApi:
+        path: /tasks/{id}
+        method: delete
+
+
+  createUser:
+    handler: src/addUser.addUser
+    events:
+      - httpApi:
+          path: /users
+          method: post  
+  getUsers:
+    handler: src/getUsers.getUsers
+    events:
+      - httpApi:
+          path: /users
+          method: get
+  getUser:
+    handler: src/getUser.getUser
+    events:
+      - httpApi:
+          path: /users/{id} 
+          method: get        
+  updateUser:
+     handler: src/updateUser.updateUser
+     events:
+       - httpApi:
+           path: /users/{id}
+           method: put 
+  deleteUser:
+     handler: src/deleteUser.deleteUser
+     events:
+       - httpApi:
+           path: /users/{id}
+           method: delete   
+
+  createPoints:
+    handler: src/addPoint.addPoint
+    events:
+      - httpApi:
+          path: /points
+          method: post  
+  getPoints:
+    handler: src/getUsers.getUsers
+    events:
+      - httpApi:
+          path: /points
+          method: get
+  getPoint:
+    handler: src/getPoint.getPoint
+    events:
+      - httpApi:
+          path: /points/{id} 
+          method: get        
+  updatePoints:
+     handler: src/updatePoint.updatePoint
+     events:
+       - httpApi:
+           path: /points/{id}
+           method: put 
+  deletePoint:
+     handler: src/deletePoint.deletePoint
+     events:
+       - httpApi:
+           path: /points/{id}
+           method: delete     
+
+
+
+resources:
+  Resources:
+    TaskTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: TaskTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+            - AttributeName: id
+              KeyType: HASH
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: UserTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH  
+    PointsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: UserTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH 
+     
+    
+
